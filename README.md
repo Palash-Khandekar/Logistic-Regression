@@ -4,7 +4,8 @@ In this project, I am making a Logistic Regression model to predict the users wh
 This model can be used by business to target their advertisements to group of users.
 
 #### Visualization of test model
-![GitHub Logo](G:\success\Machine Learning - Udemy/LR.png)
+Format: ![Alt Text](G:\success\Machine Learning - Udemy/LR.png)
+
 
 
 
