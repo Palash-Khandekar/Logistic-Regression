@@ -1,10 +1,10 @@
 ### Predicting who buys car using Logistic Regression model
 
-In this project, I am building a Logistic Regression model to predict the users who may buy  car. The variables for prediction are "Age" and "Salary" of the users. I have split the data into training and testing set in the ratio 3:1. 
-This model can be used by business to target their advertisements to group of users.
+In this project, I am creating a Logistic Regression model to predict the users who may buy  car. The variables for prediction are "Age" and "Salary" of the users. I have split the data into training and testing set in the ratio 3:1. 
+This model can be used by business to target advertisements on group of users.
 
 ### Visualization of test model
-The goal here is to classify right users in right categories. We see there are two prediction regions in the plot(Red and green). Red region indicates the user did not buy car and green region indicates user bought car.
+The goal here is to classify right users in right categories. We see there are two prediction regions in the plot(Red and green). Red region indicates the user who did not buy car and green region indicates user bought car.
 
 The line separating the two classifiers is known as prediction boundary.
 
