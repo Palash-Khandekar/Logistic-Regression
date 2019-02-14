@@ -1,4 +1,4 @@
-### Predicting who buys car using Logistic Regression
+### Predicting who buys car using Logistic Regression model
 
 In this project, I am building a Logistic Regression model to predict the users who may buy  car. The variables for prediction are "Age" and "Salary" of the users. I have split the data into training and testing set in the ratio 3:1. 
 This model can be used by business to target their advertisements to group of users.
