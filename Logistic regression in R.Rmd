@@ -1,0 +1,110 @@
+---
+title: "R Notebook: Logistic Regression"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+dataset = read.csv('Social_Network_Ads.csv')
+head(dataset)
+```
+UserID and Gender are not the variables we would need for prediction.
+```{r}
+dataset = dataset[3:5]
+head(dataset)
+```
+```{r}
+#Splitting the dataset into the Training set and Test set
+library(caTools)
+set.seed(123)
+split = sample.split(dataset$Purchased, SplitRatio = 0.75)
+training_set = subset(dataset, split == TRUE)
+test_set = subset(dataset, split == FALSE)
+
+```
+Feature Scaling
+```{r}
+training_set[-3] = scale(training_set[-3])
+test_set[-3] = scale(test_set[-3])
+```
+Fitting Logistic Regression to the Training set
+```{r}
+classifier = glm(formula = Purchased ~ .,
+                 family = binomial,
+                 data = training_set)
+summary(classifier)
+```
+All variables are 99.9% and higher statistically significant.
+
+Lets now predict the Test set results
+```{r}
+prob_pred = predict(classifier, type = 'response', newdata = test_set[-3])
+head(prob_pred,35)
+```
+The above matrix shows the probabilities of buying car.
+For e.g. user 2 has a probability of 1.6% of buying a car, we can classify this user in the category of not buying.
+user 104 has a probability of 76.49, this user comes in the category of buying car.
+
+Lets classify this users as below:
+if the probability is more than 0.5 lets classify the user into buying category else into not buying category
+```{r}
+y_pred = ifelse(prob_pred > 0.5,1,0)
+head(y_pred,35)
+```
+
+Evaluating the performance of the model using confusion matrix
+```{r}
+cm = table(test_set[,3], y_pred)
+cm
+```
+56+26 ---> correct predictions
+10+7 ---> incorrect predictions
+```{r}
+accuracy = (57+26)/(56+7+10+26)
+accuracy
+```
+### Visualization
+```{r}
+install.packages('ElemStatLearn')
+library(ElemStatLearn)
+
+```
+#### Visualising the Training set results
+```{r}
+set = training_set
+X1 = seq(min(set[, 1]) - 1, max(set[, 1]) + 1, by = 0.01)
+X2 = seq(min(set[, 2]) - 1, max(set[, 2]) + 1, by = 0.01)
+grid_set = expand.grid(X1, X2)
+colnames(grid_set) = c('Age', 'EstimatedSalary')
+prob_set = predict(classifier, type = 'response', newdata = grid_set)
+y_grid = ifelse(prob_set > 0.5, 1, 0)
+plot(set[, -3],
+     main = 'Logistic Regression (Training set)',
+     xlab = 'Age', ylab = 'Estimated Salary',
+     xlim = range(X1), ylim = range(X2))
+contour(X1, X2, matrix(as.numeric(y_grid), length(X1), length(X2)), add = TRUE)
+points(grid_set, pch = '.', col = ifelse(y_grid == 1, 'springgreen3', 'tomato'))
+points(set, pch = 21, bg = ifelse(set[, 3] == 1, 'green4', 'red3'))
+```
+#### Visualising the test set results
+```{r}
+set = test_set
+X1 = seq(min(set[, 1]) - 1, max(set[, 1]) + 1, by = 0.01)
+X2 = seq(min(set[, 2]) - 1, max(set[, 2]) + 1, by = 0.01)
+grid_set = expand.grid(X1, X2)
+colnames(grid_set) = c('Age', 'EstimatedSalary')
+prob_set = predict(classifier, type = 'response', newdata = grid_set)
+y_grid = ifelse(prob_set > 0.5, 1, 0)
+plot(set[, -3],
+     main = 'Logistic Regression (Test set)',
+     xlab = 'Age', ylab = 'Estimated Salary',
+     xlim = range(X1), ylim = range(X2))
+contour(X1, X2, matrix(as.numeric(y_grid), length(X1), length(X2)), add = TRUE)
+points(grid_set, pch = '.', col = ifelse(y_grid == 1, 'springgreen3', 'tomato'))
+points(set, pch = 21, bg = ifelse(set[, 3] == 1, 'green4', 'red3'))
+```
+
+
